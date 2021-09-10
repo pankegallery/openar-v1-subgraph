@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { generatedWallets } from '@zoralabs/core/dist/utils/generatedWallets'
+import { generatedWallets } from '../utils/generatedWallets'
 import { approveCurrency, deployCurrency, mintCurrency } from '../utils/currency'
 import { BigNumber } from 'ethers'
 import { Wallet } from '@ethersproject/wallet'
@@ -17,12 +17,14 @@ import {
   totalSupply,
   transfer,
 } from '../utils/media'
-import { MarketFactory, MediaFactory } from '@zoralabs/core/dist/typechain'
+import { MarketFactory, MediaFactory } from '../typechain'
 import Decimal from '@zoralabs/core/dist/utils/Decimal'
 import { getRandomInt } from '../utils/utils'
 import { AddressZero } from '@ethersproject/constants'
 import randomWords from 'random-words'
 import { generateMetadata, validateMetadata } from '@zoralabs/zdk'
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function startSeed() {
   // read from chainId.json
@@ -56,15 +58,13 @@ async function startSeed() {
 
   const mediaAddress = config.mediaAddress
   const marketAddress = config.marketAddress
-  const auctionHouseAddress = config.auctionHouseAddress
-
+  
   if (args.fullMonty) {
     await fullMonty(
       provider,
       wallet1,
       mediaAddress,
       marketAddress,
-      auctionHouseAddress,
       fleekApiSecret,
       fleekApiKey
     )
@@ -171,7 +171,6 @@ async function fullMonty(
   masterWallet,
   mediaAddress,
   marketAddress,
-  auctionHouseAddress,
   fleekApiSecret,
   fleekApiKey
 ) {
@@ -205,13 +204,6 @@ async function fullMonty(
     breckAddress
   )
   await setRandomBids(generatedWallets(provider), mediaAddress, breckAddress)
-
-  // await setupRandomAuctions(
-  //   generatedWallets(provider),
-  //   mediaAddress,
-  //   marketAddress,
-  //   breckAddress
-  // )
 }
 
 async function setUpNewCurrency(
@@ -257,82 +249,89 @@ async function mintMedia(
 
     let picsumIds = new Set()
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 10; i++) {
       const x = getRandomInt(200, 600)
       const y = getRandomInt(200, 600)
       const blur = getRandomInt(1, 10)
-
-      let response = await axios.get(`https://picsum.photos/${x}/${y}`, {
-        responseType: 'arraybuffer',
-      })
-      let picsumId = response.headers['picsum-id']
-
-      while (picsumIds.has(picsumId)) {
-        response = await axios.get(`https://picsum.photos/${x}/${y}`, {
+      try {
+        let response = await axios.get(`https://picsum.photos/${x}/${y}`, {
           responseType: 'arraybuffer',
         })
-        picsumId = response.headers['picsum-id']
+        let picsumId = response.headers['picsum-id']
+
+        while (picsumIds.has(picsumId)) {
+          response = await axios.get(`https://picsum.photos/${x}/${y}`, {
+            responseType: 'arraybuffer',
+          })
+          picsumId = response.headers['picsum-id']
+        }
+
+        picsumIds.add(picsumId)
+        let sha256 = crypto.createHash('sha256')
+        sha256.update(response.data)
+        let contentHash = sha256.digest()
+
+        // upload the file to ipfs
+        const contentCID = await fleekStorage.upload({
+          apiKey: fleekApiKey,
+          apiSecret: fleekApiSecret,
+          key: wallet.address.concat('-').concat(i.toString()),
+          data: response.data,
+        })
+
+        const randomName = randomWords({min: 2, max: 5, join: ' '})
+        const randomDescription = randomWords({exactly: 10, join: ' '})
+
+        const metadata = {
+          version: 'zora-20210101',
+          name: randomName,
+          description: randomDescription,
+          mimeType: 'image/jpeg',
+        }
+        const minified = generateMetadata(metadata.version, metadata)
+        const validated = validateMetadata(metadata.version, JSON.parse(minified))
+
+        // hash the metadata
+        let metadataSha256 = crypto.createHash('sha256')
+        metadataSha256.update(Buffer.from(minified))
+        let metadataHash = metadataSha256.digest()
+
+        // upload it to ipfs
+        const metadataCID = await fleekStorage.upload({
+          apiKey: fleekApiKey,
+          apiSecret: fleekApiSecret,
+          key: wallet.address.concat('-').concat(
+            i
+              .toString()
+              .concat('-')
+              .concat('metadata')
+          ),
+          data: minified,
+        })
+
+        const contentHashString = contentCID.hash.replace(/['"]+/g, '')
+        const metadataHashString = metadataCID.hash.replace(/['"]+/g, '')
+
+        console.log('https://ipfs.io/ipfs/'.concat(contentHashString))
+        console.log('https://ipfs.io/ipfs/'.concat(metadataHashString))
+
+        let mediaData = {
+          tokenURI: 'https://ipfs.io/ipfs/'.concat(contentHashString),
+          metadataURI: 'https://ipfs.io/ipfs/'.concat(metadataHashString),
+          contentHash: Uint8Array.from(contentHash),
+          metadataHash: Uint8Array.from(metadataHash),
+        }
+
+        // mint the thing
+        console.log(`${i}: Minting new media for address: ${wallet.address.toLowerCase()}`)
+        await mint(mediaAddress, wallet, mediaData)
+        await delay(2000);
+        console.log("... done");
+      } catch (err) {
+        console.error(err)
+        i -= 1;
       }
-
-      picsumIds.add(picsumId)
-      let sha256 = crypto.createHash('sha256')
-      sha256.update(response.data)
-      let contentHash = sha256.digest()
-
-      // upload the file to ipfs
-      const contentCID = await fleekStorage.upload({
-        apiKey: fleekApiKey,
-        apiSecret: fleekApiSecret,
-        key: wallet.address.concat('-').concat(i.toString()),
-        data: response.data,
-      })
-
-      const randomName = randomWords({min: 2, max: 5, join: ' '})
-      const randomDescription = randomWords({exactly: 10, join: ' '})
-
-      const metadata = {
-        version: 'zora-20210101',
-        name: randomName,
-        description: randomDescription,
-        mimeType: 'image/jpeg',
-      }
-      const minified = generateMetadata(metadata.version, metadata)
-      const validated = validateMetadata(metadata.version, JSON.parse(minified))
-
-      // hash the metadata
-      let metadataSha256 = crypto.createHash('sha256')
-      metadataSha256.update(Buffer.from(minified))
-      let metadataHash = metadataSha256.digest()
-
-      // upload it to ipfs
-      const metadataCID = await fleekStorage.upload({
-        apiKey: fleekApiKey,
-        apiSecret: fleekApiSecret,
-        key: wallet.address.concat('-').concat(
-          i
-            .toString()
-            .concat('-')
-            .concat('metadata')
-        ),
-        data: minified,
-      })
-
-      const contentHashString = contentCID.hash.replace(/['"]+/g, '')
-      const metadataHashString = metadataCID.hash.replace(/['"]+/g, '')
-
-      console.log('https://ipfs.io/ipfs/'.concat(contentHashString))
-      console.log('https://ipfs.io/ipfs/'.concat(metadataHashString))
-
-      let mediaData = {
-        tokenURI: 'https://ipfs.io/ipfs/'.concat(contentHashString),
-        metadataURI: 'https://ipfs.io/ipfs/'.concat(metadataHashString),
-        contentHash: Uint8Array.from(contentHash),
-        metadataHash: Uint8Array.from(metadataHash),
-      }
-
-      // mint the thing
-      console.log('Minting new media for address: ', wallet.address.toLowerCase())
-      await mint(mediaAddress, wallet, mediaData)
+      
     }
   }
   console.log('Completed Seeding GraphQL with Minted Media')
@@ -443,7 +442,7 @@ async function setRandomBids(
     const media = MediaFactory.connect(mediaAddress, wallet)
     const numTokens = await media.balanceOf(wallet.address)
 
-    for (let j = 0; j < 25; j++) {
+    for (let j = 0; j < 10; j++) {
       // get each token
       let tokenIds = new Set()
 
@@ -457,15 +456,15 @@ async function setRandomBids(
       // generate a random token to bid on
       const supply = await totalSupply(mediaAddress, wallet)
       console.log(`Total Supply: ${supply}`)
-      let randomTokenId = getRandomInt(0, supply.toNumber())
+      let randomTokenId = getRandomInt(0, supply.toNumber() - 1)
 
       while (tokenIds.has(randomTokenId)) {
-        randomTokenId = getRandomInt(0, supply.toNumber())
+        randomTokenId = getRandomInt(0, supply.toNumber() - 1)
       }
 
       let bid = {
         currency: currencyAddress,
-        amount: Decimal.new(getRandomInt(0, 1000)).value,
+        amount: Decimal.new(getRandomInt(1, 1000)).value,
         sellOnShare: {value: Decimal.new(getRandomInt(0, 10)).value},
         recipient: wallet.address,
         bidder: wallet.address,
@@ -494,7 +493,7 @@ async function randomTransfers(wallets: Array<Wallet>, mediaAddress: string) {
     const media = MediaFactory.connect(mediaAddress, wallet)
 
     const numTokens = await media.balanceOf(wallet.address)
-    const rand = getRandomInt(0, numTokens.toNumber())
+    const rand = getRandomInt(0, numTokens.toNumber() - 1)
     const tokenId = await media.tokenOfOwnerByIndex(wallet.address, rand)
     const randWalletId = getRandomInt(0, 9)
     console.log(
@@ -503,8 +502,6 @@ async function randomTransfers(wallets: Array<Wallet>, mediaAddress: string) {
     await transfer(mediaAddress, wallet, tokenId, wallets[randWalletId].address)
   }
 }
-
-// async function setupRandomAuctions(wallets: Array<Wallet>, mediaAddress: string, auctionHouseAddress: string, currencyAddress: string)
 
 startSeed().catch((e: Error) => {
   console.error(e)

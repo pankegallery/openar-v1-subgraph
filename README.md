@@ -21,9 +21,6 @@ References:
 ## Local Setup
 
 ### 1. Run Local Blockchain
-
-From the project directory.
-
 ```
 yarn && yarn chain
 ```
@@ -57,7 +54,7 @@ Configure `.env.local`. Copy the fields from the `.env.example`.
 
 Hint: 
 - Copy / Paste `http://0.0.0.0:8545` as RPC_ENDPOINT
-- Copy / Paste the first Private Key from `@zoralabs/core/dist/utils/generatedWallets` as PK.
+- Copy / Paste the first Private Key from `./utils/generatedWallets` as PK.
 - Set `PATH_TO_GRAPH` as the path to the dir of the `graph-node` repository you just cloned.
 - Set `FLEEK_API_KEY`
 - Set `FLEEK_API_SECRET`
@@ -69,8 +66,8 @@ yarn deploy-contracts --chainId 50
 ### 4. Build and Deploy Subgraph to Local Graph Node
 
 ```
-yarn codegen
 yarn prepare:local 
+yarn codegen
 yarn build
 yarn create-local
 yarn deploy-local

@@ -1,5 +1,5 @@
 import { BigNumber, Wallet } from 'ethers'
-import { BaseErc20Factory } from '@zoralabs/core/dist/typechain'
+import { BaseErc20Factory } from '../typechain'
 import { MaxUint256 } from '@ethersproject/constants'
 
 export async function deployCurrency(

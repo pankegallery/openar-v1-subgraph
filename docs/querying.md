@@ -47,7 +47,7 @@ To programmatically query the openAR Subgraph you can send queries to `https://a
 `Media by Creator`
 ```gql
 {
-  media(where: { creator: "" }) {
+  medias(where: { creator: "" }) {
     id
     metadataURI
     contentURI
@@ -84,7 +84,7 @@ To programmatically query the openAR Subgraph you can send queries to `https://a
 
 ```gql
 {
-  media(where: { owner: "" }) {
+  medias(where: { owner: "" }) {
     id
     metadataURI
     contentURI
@@ -121,7 +121,7 @@ To programmatically query the openAR Subgraph you can send queries to `https://a
 
 ```gql
 {
-  media(where: { prevOwner: "" }) {
+  medias(where: { prevOwner: "" }) {
     id
     metadataURI
     contentURI

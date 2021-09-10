@@ -1,5 +1,5 @@
 import { Wallet } from '@ethersproject/wallet'
-import { MediaFactory } from '@zoralabs/core/dist/typechain/MediaFactory'
+import { MediaFactory } from '../typechain/MediaFactory'
 import Decimal from '@zoralabs/core/dist/utils/Decimal'
 import { BigNumber, Bytes } from 'ethers'
 import { SolidityBid, SolidityAsk, MediaData } from '../utils/types'
@@ -7,7 +7,9 @@ import { SolidityBid, SolidityAsk, MediaData } from '../utils/types'
 export async function mint(mediaAddress: string, wallet: Wallet, mediaData: MediaData) {
   const media = await MediaFactory.connect(mediaAddress, wallet)
   const tx = await media.mint(mediaData, {
-    creator: Decimal.new(10),
+    creator: Decimal.new(0),
+    pool: Decimal.new(10),
+    platform: Decimal.new(5),
     owner: Decimal.new(90),
     prevOwner: Decimal.new(0),
   })

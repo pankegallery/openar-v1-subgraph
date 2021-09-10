@@ -1,9 +1,9 @@
 import { request } from 'graphql-request'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { generatedWallets } from '@zoralabs/core/dist/utils/generatedWallets'
+import { generatedWallets } from '../utils/generatedWallets'
 import { Blockchain } from '@zoralabs/core/dist/utils/Blockchain'
-import { MarketFactory } from '@zoralabs/core/dist/typechain/MarketFactory'
-import { MediaFactory } from '@zoralabs/core/dist/typechain/MediaFactory'
+import { MarketFactory } from '../typechain/MarketFactory'
+import { MediaFactory } from '../typechain/MediaFactory'
 import {
   BigNumber,
   BigNumberish,
@@ -43,7 +43,7 @@ import {
   userByIdQuery,
 } from './queries'
 import { delay, exponentialDelay, randomHashBytes, toNumWei } from './utils'
-import { BaseErc20Factory } from '@zoralabs/core/dist/typechain'
+import { BaseErc20Factory } from '../typechain'
 import { approveCurrency, mintCurrency } from '../utils/currency'
 import dotenv from 'dotenv'
 import { SolidityAsk, SolidityBid } from '../utils/types'
@@ -56,7 +56,7 @@ axiosRetry(axios, {
 dotenv.config({ path: '.env.local' })
 jest.setTimeout(1000000)
 
-const gqlURL = 'http://127.0.0.1:8000/subgraphs/name/sporkspatula/zora-v1-subgraph'
+const gqlURL = 'http://127.0.0.1:8000/subgraphs/name/novazembla/openar-v1-subgraph'
 const pathToGraphNode = process.env.PATH_TO_GRAPH
 
 describe('Media', async () => {
@@ -89,9 +89,11 @@ describe('Media', async () => {
 
   async function mint(wallet: Wallet, contentHash: Bytes, metadataHash: Bytes) {
     let defaultBidShares = {
-      prevOwner: Decimal.new(10),
-      owner: Decimal.new(80),
-      creator: Decimal.new(10),
+      pool: Decimal.new(10),
+      platform: Decimal.new(5),
+      prevOwner: Decimal.new(0),
+      owner: Decimal.new(85),
+      creator: Decimal.new(0),
     }
 
     const media = await MediaFactory.connect(mediaAddress, wallet)
@@ -164,7 +166,10 @@ describe('Media', async () => {
     const market = await (await new MarketFactory(wallet).deploy()).deployed()
     marketAddress = market.address
 
-    const media = await (await new MediaFactory(wallet).deploy(market.address)).deployed()
+    const media = await (await new MediaFactory(wallet).deploy()).deployed()
+
+    await media.configure(market.address);
+
     mediaAddress = media.address
 
     await market.configure(mediaAddress)

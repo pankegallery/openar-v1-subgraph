@@ -1,5 +1,5 @@
-import { BaseErc20Factory } from '@zoralabs/core/dist/typechain'
-import { generatedWallets } from '@zoralabs/core/dist/utils/generatedWallets'
+import { BaseErc20Factory } from '../typechain'
+import { generatedWallets } from '../utils/generatedWallets'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { MaxUint256 } from '@ethersproject/constants'
 import { deployCurrency } from '../utils/currency'

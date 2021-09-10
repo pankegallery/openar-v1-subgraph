@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber, Bytes, ethers } from 'ethers'
 import { sha256 } from 'ethers/lib/utils'
-import { generatedWallets } from '@zoralabs/core/dist/utils/generatedWallets'
+import { generatedWallets } from '../utils/generatedWallets'
 import {
   approve,
   approveForAll,
@@ -20,7 +20,7 @@ import { promises as fs } from 'fs'
 import Decimal from '@zoralabs/core/dist/utils/Decimal'
 import crypto from 'crypto'
 import fleekStorage from '@fleekhq/fleek-storage-js'
-import { MediaFactory } from '@zoralabs/core/dist/typechain'
+import { MediaFactory } from '../typechain'
 import { sha256FromFile } from '../utils/utils'
 import { generateMetadata } from '@zoralabs/zdk'
 import randomWords from 'random-words'

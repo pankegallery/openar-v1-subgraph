@@ -9,7 +9,6 @@
   },
   "include": [
     "./scripts",
-    "./test",
-    "@ourzora/media"
+    "./test"
   ]
 }

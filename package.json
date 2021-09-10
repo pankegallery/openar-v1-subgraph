@@ -2,8 +2,6 @@
   "name": "zora-v1-subgraph",
   "version": "1.0.0",
   "scripts": {
-    "dev-deploy": "echo \"{}\" > ./addresses/1337.json && ts-node scripts/deploy.ts --chainId=1337",
-    "dev-chain": "ganache-cli --networkId 1337 --accounts 20 -e 10000000000 -l 10000000 -m 'concert load couple harbor equip island argue ramp clarify fence smart topic'",
     "seed-graph": "ts-node scripts/seed",
     "deploy-contracts": "ts-node scripts/deploy.ts",
     "prepare:mainnet": "mustache config/1.json subgraph.template.yaml > subgraph.yaml",
@@ -11,13 +9,13 @@
     "prepare:mumbai": "mustache config/80001.json subgraph.template.yaml > subgraph.yaml",
     "prepare:polygon": "mustache config/137.json subgraph.template.yaml > subgraph.yaml",
     "prepare:local": "mustache config/50.json subgraph.template.yaml > subgraph.yaml",
-    "create": "graph create sporkspatula/zora-v1-subgraph --node https://api.thegraph.com/deploy/",
-    "create-local": "graph create sporkspatula/zora-v1-subgraph --node http://127.0.0.1:8020",
+    "create": "graph create novazembla/openar-v1-subgraph --node https://api.thegraph.com/deploy/",
+    "create-local": "graph create novazembla/openar-v1-subgraph --node http://127.0.0.1:8020",
     "test": "jest",
     "codegen": "graph codegen --output-dir types",
     "build": "graph build",
-    "deploy": "graph deploy sporkspatula/zora-v1-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy-local": "graph deploy sporkspatula/zora-v1-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
+    "deploy": "graph deploy novazembla/openar-v1-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy-local": "graph deploy novazembla/openar-v1-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.0.16",
