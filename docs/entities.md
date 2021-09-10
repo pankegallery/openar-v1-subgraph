@@ -1,37 +1,37 @@
-# Zora Subgraph Entities
+# openAR Subgraph Entities
 
-This page describes all of the GraphQL entities of the Zora Subgraph.
+This page describes all of the GraphQL entities of the openAR Subgraph.
 
 ## Media
 
-The `Media` entity represents the core data for a piece of Zora `cryptomedia`.
+The `Media` entity represents the core data for a piece of openAR `cryptomedia`.
 
-| Field Name            |  Type     |     Description                                            |
-| --------------------- | --------- | ---------------------------------------------------------- |
-| id                    | ID        | The tokenId on the Zora Media Contract                     |
-| owner                 | User      | The current owner of the Media                             |
-| creator               | User      | The creator of the Media                                   |
-| prevowner             | User      | The previous owner of the Zora Media's Market              |
-| approved              | User      | The approved user of the Media                             |
-| contentHash           | Bytes     | The sha256 hash of the media's content                     |
-| metadataHash          | Bytes     | The sha256 hash of the media's metadata                    |
-| contentURI            | String    | The uri of the content                                     |
-| metadataURI           | String    | The uri of the metadata                                    |
-| ownerBidShare         | BigInt    | The bid share for the current owner of the Media           |
-| creatorBidShare       | BigInt    | The bid share for the creator of the Media                 |
-| prevOwnerBidShare     | BigInt    | The bid share for the previous owner of the Media's market |
-| createdAtTimestamp    | BigInt    | The timestamp of the block the Media was minted in         |
-| createdAtBlockNumber  | BigInt    | The number of the block the Media was minted in            |
-| burnedAtTimestamp     | BigInt    | The timestamp of the block the Media was burned in         |
-| burnedAtBlockNumber   | BigInt    | The number of the block the Media was burned in            |
-| currentAsk            | Ask       | The current Ask of the Media                               |
-| currentBids           | \[Bid\]   | The current Bids on the Media                              |
-| inactiveAsks          | \[Ask\]   | The InactiveAsks of the Media                              |
-| inactiveBids          | \[Bid\]   | The InactiveBids of the Media                              |
+| Field Name            |  Type     |     Description                                               |
+| --------------------- | --------- | ------------------------------------------------------------- |
+| id                    | ID        | The tokenId on the openAR Media Contract                      |
+| owner                 | User      | The current owner of the Media                                |
+| creator               | User      | The creator of the Media                                      |
+| prevowner             | User      | The previous owner of the openAR Media's Market               |
+| approved              | User      | The approved user of the Media                                |
+| contentHash           | Bytes     | The sha256 hash of the media's content                        |
+| metadataHash          | Bytes     | The sha256 hash of the media's metadata                       |
+| contentURI            | String    | The uri of the content                                        |
+| metadataURI           | String    | The uri of the metadata                                       |
+| ownerBidShare         | BigInt    | The bid share for the current owner of the Media              |
+| creatorBidShare       | BigInt    | The bid share for the creator of the Media                    |
+| prevOwnerBidShare     | BigInt    | The bid share for the previous owner of the Media's market    |
+| createdAtTimestamp    | BigInt    | The timestamp of the block the Media was minted in            |
+| createdAtBlockNumber  | BigInt    | The number of the block the Media was minted in               |
+| burnedAtTimestamp     | BigInt    | The timestamp of the block the Media was burned in            |
+| burnedAtBlockNumber   | BigInt    | The number of the block the Media was burned in               |
+| currentAsk            | Ask       | The current Ask of the Media                                  |
+| currentBids           | \[Bid\]   | The current Bids on the Media                                 |
+| inactiveAsks          | \[Ask\]   | The InactiveAsks of the Media                                 |
+| inactiveBids          | \[Bid\]   | The InactiveBids of the Media                                 |
 
 ## Users
 
-The `User` entity represents ethereum accounts that interact with the Zora Protocol.
+The `User` entity represents ethereum accounts that interact with the openAR Protocol.
 
 | Field Name            |  Type     |     Description                                                               |
 | --------------------- | --------- | ----------------------------------------------------------------------------- |
@@ -43,7 +43,7 @@ The `User` entity represents ethereum accounts that interact with the Zora Proto
 
 ## Ask
 
-The `Ask` entity represents an onchain Ask for a piece of cryptomedia on the Zora Protocol.
+The `Ask` entity represents an onchain Ask for a piece of cryptomedia on the openAR Protocol.
 
 | Field Name            |  Type     |     Description                                    |
 | --------------------- | --------- | -------------------------------------------------- |
@@ -57,7 +57,7 @@ The `Ask` entity represents an onchain Ask for a piece of cryptomedia on the Zor
 
 ## InactiveAsk
 
-The `InactiveAsk` entity represents an Ask that is no longer valid on the Zora Protocol. InactiveAsks have either been `removed` or `finalized`.
+The `InactiveAsk` entity represents an Ask that is no longer valid on the openAR Protocol. InactiveAsks have either been `removed` or `finalized`.
 
 | Field Name            |  Type           |     Description                                            |
 | --------------------- | --------------- | ---------------------------------------------------------- |
@@ -72,7 +72,7 @@ The `InactiveAsk` entity represents an Ask that is no longer valid on the Zora P
 
 ## Bid
 
-The `Bid` entity represents an onchain Bid for a piece of cryptomedia on the Zora Protocol.
+The `Bid` entity represents an onchain Bid for a piece of cryptomedia on the openAR Protocol.
 
 | Field Name            |  Type           |     Description                                    |
 | --------------------- | --------------- | -------------------------------------------------- |
@@ -88,7 +88,7 @@ The `Bid` entity represents an onchain Bid for a piece of cryptomedia on the Zor
 
 ## InactiveBid
 
-The `InactiveAsk` entity represents a Bid that is no longer valid on the Zora Protocol. InactiveBids have either been `removed` or `finalized`.
+The `InactiveAsk` entity represents a Bid that is no longer valid on the openAR Protocol. InactiveBids have either been `removed` or `finalized`.
 
 
 | Field Name            |  Type           |     Description                                            |
@@ -106,7 +106,7 @@ The `InactiveAsk` entity represents a Bid that is no longer valid on the Zora Pr
 
 ## Currency
 
-The `Currency` entity represents ERC-20 tokens that have been used as Asks or Bids on the Zora Protocol.
+The `Currency` entity represents ERC-20 tokens that have been used as Asks or Bids on the openAR Protocol.
 
 | Field Name            |  Type   |     Description                                        |
 | --------------------- | ------- | ------------------------------------------------------ |
@@ -114,7 +114,7 @@ The `Currency` entity represents ERC-20 tokens that have been used as Asks or Bi
 | name                  | String  | The name of the Currency                               |
 | symbol                | String  | The symbol of the Currency                             |
 | decimals              | Int     | The decimals of the Currency                           |
-| liquidity             | BigInt  | Total Bid Liquidity of the Currency on all Zora Media  |
+| liquidity             | BigInt  | Total Bid Liquidity of the Currency on all openAR Media  |
 | activeBids            | \[Bid\] | The active Bids denominated in the Currency            |
 | activeAsks            | User    | The active Asks denominated in the Currency            |
 | inactiveBids          | User    | The InactiveBids denominated in the Currency           |
@@ -122,7 +122,7 @@ The `Currency` entity represents ERC-20 tokens that have been used as Asks or Bi
 
 ## Transfer
 
-The `Transfer` entity represents transfers of ownership of pieces of cryptomedia on the Zora Protocol.
+The `Transfer` entity represents transfers of ownership of pieces of cryptomedia on the openAR Protocol.
 
 
 | Field Name            |  Type   |     Description                                        |
@@ -137,7 +137,7 @@ The `Transfer` entity represents transfers of ownership of pieces of cryptomedia
 
 ## URIUpdate
 
-The `URIUpdate` entity represents updates to the `content` or `metadata` uris of cryptomedia on the Zora Protocol.
+The `URIUpdate` entity represents updates to the `content` or `metadata` uris of cryptomedia on the openAR Protocol.
 
 | Field Name            |  Type         |     Description                                         |
 | --------------------- |-------------- | ------------------------------------------------------- |
