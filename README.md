@@ -50,20 +50,30 @@ rm -rf ./data
 
 ### 3. Deploy Contracts to Local Blockchain
 
+In openar/openar-contracts
+
+Terminal 1: 
+```
+npx hardhat node
+```
+
+Terminal 2:
+```
+yarn dev-deploy
+```
+Then copy and past the info in addresses/31337.json to the 31337.json file in openar/openar-v1-subgraph/config (create by cloning 1.json if needed). You need to configure market, media, and weth address
+
+### 4. Build and Deploy Subgraph to Local Graph Node
+
 Configure `.env.local`. Copy the fields from the `.env.example`.
 
 Hint: 
 - Copy / Paste `http://0.0.0.0:8545` as RPC_ENDPOINT
-- Copy / Paste the first Private Key from `./utils/generatedWallets` as PK.
+- Copy / Paste the first Private Key from `./utils/generateWallets` as PK.
 - Set `PATH_TO_GRAPH` as the path to the dir of the `graph-node` repository you just cloned.
 - Set `FLEEK_API_KEY`
 - Set `FLEEK_API_SECRET`
 
-```
-yarn deploy-contracts --chainId 50
-```
-
-### 4. Build and Deploy Subgraph to Local Graph Node
 
 ```
 yarn prepare:local 
@@ -76,7 +86,7 @@ yarn deploy-local
 ### 5. Seed Contract with Newly Minted Media
 
 ```
-yarn seed-graph --chainId 50 --fullMonty
+yarn seed-graph --chainId 31337 --fullMonty
 ```
 
 ### 6. Voila
@@ -114,11 +124,11 @@ There are many scripts that can be run to customize the data populated in your c
 
 **Note**: In order to mint the scripts rely on Fleek as an IPFS pinning service to pin media to ipfs. Minting scripts will not work without Fleek Setup.
 
-In `seed.ts` you have the following options to run for all of the generatedWallets
+In `seed.ts` you have the following options to run for all of the generateWallets
 - `--fullyMonty` will deploy a new currency contract, mint currency, approve currency, mintMedia, setRandomAsks, and setRandomBids
-- `--asks` will set random asks on all the media minted by the generatedWallets
-- `--bids` will set random bids on 1 piece of media for each wallet in generatedWallets
-- `--transfers` will randomly transfer 1 piece of media from each wallet to a randomly selected wallet in generatedWallets
+- `--asks` will set random asks on all the media minted by the generateWallets
+- `--bids` will set random bids on 1 piece of media for each wallet in generateWallets
+- `--transfers` will randomly transfer 1 piece of media from each wallet to a randomly selected wallet in generateWallets
 - `--removeBids` will remove random bids from Media
 - `--accceptRandomBids` will randomly accept bids on Media if they exist
 - `--currency` will create a new ERC20 with specified name and symbol and mint funds to each generated wallet of the provider and approve the market contract to transfer

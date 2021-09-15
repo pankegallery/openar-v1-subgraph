@@ -1,5 +1,4 @@
-import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts/index'
-import { store, log } from '@graphprotocol/graph-ts'
+import { Address, BigInt,Bytes } from '@graphprotocol/graph-ts/index'
 import {
   Ask,
   Bid,
@@ -8,7 +7,7 @@ import {
   InactiveBid,
   Media,
   Transfer,
-  URIUpdate,
+  URIUpdate, 
   User,
 } from '../types/schema'
 import { Media as MediaContract } from '../types/Media/Media'
@@ -201,6 +200,10 @@ export function createMedia(
   owner: User,
   creator: User,
   prevOwner: User,
+  artworkKey: string,
+  arObjectKey: string,
+  editionOf: BigInt,
+  editionNumber: BigInt,
   contentURI: string,
   contentHash: Bytes,
   metadataURI: string,
@@ -216,6 +219,10 @@ export function createMedia(
   media.transactionHash = transactionHash
   media.creator = creator.id
   media.prevOwner = prevOwner.id
+  media.artworkKey = artworkKey
+  media.arObjectKey = arObjectKey
+  media.editionOf = editionOf
+  media.editionNumber = editionNumber
   media.contentURI = contentURI
   media.contentHash = contentHash
   media.metadataURI = metadataURI

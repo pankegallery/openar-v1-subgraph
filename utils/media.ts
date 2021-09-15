@@ -1,12 +1,12 @@
 import { Wallet } from '@ethersproject/wallet'
-import { MediaFactory } from '../typechain/MediaFactory'
+import { Media__factory, Market__factory } from '../typechain'
 import Decimal from '@zoralabs/core/dist/utils/Decimal'
 import { BigNumber, Bytes } from 'ethers'
-import { SolidityBid, SolidityAsk, MediaData } from '../utils/types'
+import { SolidityBid, SolidityAsk, MintData } from '../utils/types'
 
-export async function mint(mediaAddress: string, wallet: Wallet, mediaData: MediaData) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.mint(mediaData, {
+export async function mint(mediaAddress: string, wallet: Wallet, mintData: MintData) {
+  const media = await Media__factory.connect(mediaAddress, wallet)
+  const tx = await media.mint(mintData, {
     creator: Decimal.new(0),
     pool: Decimal.new(10),
     platform: Decimal.new(5),
@@ -17,7 +17,7 @@ export async function mint(mediaAddress: string, wallet: Wallet, mediaData: Medi
 }
 
 export async function burn(mediaAddress: string, wallet: Wallet, tokenId: BigNumber) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
+  const media = await Media__factory.connect(mediaAddress, wallet)
   const tx = await media.burn(tokenId)
   console.log(tx)
   await tx.wait()
@@ -29,7 +29,7 @@ export async function updateTokenURI(
   tokenId: BigNumber,
   tokenURI: string
 ) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
+  const media = await Media__factory.connect(mediaAddress, wallet)
   const tx = await media.updateTokenURI(tokenId, tokenURI)
   console.log(tx)
   await tx.wait()
@@ -41,14 +41,14 @@ export async function updateTokenMetadataURI(
   tokenId: BigNumber,
   tokenMetadataURI: string
 ) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
+  const media = await Media__factory.connect(mediaAddress, wallet)
   const tx = await media.updateTokenMetadataURI(tokenId, tokenMetadataURI)
   console.log(tx)
   await tx.wait()
 }
 
 export async function totalSupply(mediaAddress: string, wallet: Wallet) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
+  const media = Media__factory.connect(mediaAddress, wallet)
   return await media.totalSupply()
 }
 
@@ -58,7 +58,7 @@ export async function approve(
   tokenId: BigNumber,
   toAddress: string
 ) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
+  const media = Media__factory.connect(mediaAddress, wallet)
   const tx = await media.approve(toAddress, tokenId)
   console.log(tx)
   await tx.wait()
@@ -70,7 +70,7 @@ export async function approveForAll(
   operator: string,
   approved: boolean
 ) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
+  const media = Media__factory.connect(mediaAddress, wallet)
   const tx = await media.setApprovalForAll(operator, approved)
   console.log(tx)
   await tx.wait()
@@ -82,66 +82,66 @@ export async function transfer(
   tokenId: BigNumber,
   to: string
 ): Promise<string> {
-  const media = MediaFactory.connect(mediaAddress, wallet)
+  const media = Media__factory.connect(mediaAddress, wallet)
   const tx = await media.transferFrom(wallet.address, to, tokenId)
   await tx.wait()
   return tx.hash
 }
 
 export async function setAsk(
-  mediaAddress: string,
+  marketAddress: string,
   wallet: Wallet,
   tokenId: BigNumber,
   ask: SolidityAsk
 ) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.setAsk(tokenId, ask)
+  const market = await Market__factory.connect(marketAddress, wallet)
+  const tx = await market.setAsk(tokenId, ask)
   console.log(tx)
   await tx.wait()
 }
 
 export async function removeAsk(
-  mediaAddress: string,
+  marketAddress: string,
   wallet: Wallet,
   tokenId: BigNumber
 ) {
-  const media = await MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.removeAsk(tokenId)
+  const market = await Market__factory.connect(marketAddress, wallet)
+  const tx = await market.removeAsk(tokenId)
   console.log(tx)
   await tx.wait()
 }
 
 export async function setBid(
-  mediaAddress: string,
+  marketAddress: string,
   wallet: Wallet,
   tokenId: BigNumber,
   bid: SolidityBid
 ) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.setBid(tokenId, bid)
+  const market = Market__factory.connect(marketAddress, wallet)
+  const tx = await market.setBid(tokenId, bid)
   console.log(tx)
   await tx.wait()
 }
 
 export async function removeBid(
-  mediaAddress: string,
+  marketAddress: string,
   wallet: Wallet,
   tokenId: BigNumber
 ) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.removeBid(tokenId)
+  const market = Market__factory.connect(marketAddress, wallet)
+  const tx = await market.removeBid(tokenId)
   console.log(tx)
   await tx.wait()
 }
 
 export async function acceptBid(
-  mediaAddress: string,
+  marketAddress: string,
   wallet: Wallet,
   tokenId: BigNumber,
   bid: SolidityBid
 ) {
-  const media = MediaFactory.connect(mediaAddress, wallet)
-  const tx = await media.acceptBid(tokenId, bid)
+  const market = Market__factory.connect(marketAddress, wallet)
+  const tx = await market.acceptBid(tokenId, bid)
   console.log(tx)
   await tx.wait()
 }

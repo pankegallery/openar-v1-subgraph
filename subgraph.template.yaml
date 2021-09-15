@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 description: Zora Media
-repository: https://github.com/ourzora/zora-v1-subgraph
+repository: https://github.com/openar/openar-v1-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -58,7 +58,7 @@ dataSources:
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
       eventHandlers:
-        - event: BidShareUpdated(indexed uint256,((uint256),(uint256),(uint256)))
+        - event: BidShareUpdated(indexed uint256,((uint256),(uint256),(uint256),(uint256),(uint256)))
           handler: handleBidShareUpdated
         - event: AskCreated(indexed uint256,(uint256,address))
           handler: handleAskCreated

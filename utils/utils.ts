@@ -1,5 +1,12 @@
 import fs from 'fs'
 import sjcl from 'sjcl'
+import { utils } from "ethers";
+import { customAlphabet } from "nanoid";
+
+export const nanoidCustom16 = customAlphabet(
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  16
+);
 
 export function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -23,4 +30,8 @@ export function sha256FromFile(pathToFile: string, chunkSize: number): Promise<s
       reject(err)
     })
   })
+}
+
+export const getBytes32FromString = (str: string) => {
+  return utils.arrayify(utils.formatBytes32String(str));
 }

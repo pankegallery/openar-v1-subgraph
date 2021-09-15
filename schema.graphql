@@ -23,11 +23,23 @@ type Media @entity {
   "The sha256 hash of the media's metadata"
   metadataHash: Bytes!
 
+  "The sha256 hash of the media's openAR artwork key"
+  artworkKey: String!
+
+  "The sha256 hash of the media's openAR object key"
+  arObjectKey: String!
+
   "The uri of the content"
   contentURI: String!
 
   "The uri of the metadata"
   metadataURI: String!
+
+  "How many NFTs have been minted for this object"
+  editionOf: BigInt!
+
+  "How edition number of this NFT in the series"
+  editionNumber: BigInt!
 
   "The bid share for the current owner of the Media"
   ownerBidShare: BigInt!

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber, Bytes, ethers } from 'ethers'
 import { sha256 } from 'ethers/lib/utils'
-import { generatedWallets } from '../utils/generatedWallets'
+import { generateWallets } from '../utils/generateWallets'
 import {
   approve,
   approveForAll,
@@ -20,10 +20,14 @@ import { promises as fs } from 'fs'
 import Decimal from '@zoralabs/core/dist/utils/Decimal'
 import crypto from 'crypto'
 import fleekStorage from '@fleekhq/fleek-storage-js'
-import { MediaFactory } from '../typechain'
-import { sha256FromFile } from '../utils/utils'
+import { Media__factory } from '../typechain'
+import { sha256FromFile, getBytes32FromString } from '../utils/utils'
 import { generateMetadata } from '@zoralabs/zdk'
 import randomWords from 'random-words'
+
+
+const artworkKey = '7QEHYy4i8078lGXP';
+const arObjectKey = '8QEHYy4i8078lGXP';
 
 async function start() {
   const args = require('minimist')(process.argv.slice(2))
@@ -51,7 +55,7 @@ async function start() {
   await require('dotenv').config({ path })
   const provider = new JsonRpcProvider(process.env.RPC_ENDPOINT)
 
-  let [wallet1, wallet2, wallet3, wallet4, wallet5] = generatedWallets(provider)
+  let [wallet1, wallet2, wallet3, wallet4, wallet5] = generateWallets(provider)
 
   let contentHex: string
   let contentHash: string
@@ -107,7 +111,7 @@ async function start() {
       metadataSha256.update(Buffer.from(minified))
       let metadataHash = metadataSha256.digest()
 
-      const balance = await MediaFactory.connect(
+      const balance = await Media__factory.connect(
         addressBook.mediaAddress,
         wallet1
       ).balanceOf(wallet1.address)
@@ -127,8 +131,12 @@ async function start() {
       let mediaData = {
         tokenURI: 'https://ipfs.io/ipfs/'.concat(ipfsPath),
         metadataURI: 'https://ipfs.io/ipfs/'.concat(metadataCID.hash),
+        awKeyHex: getBytes32FromString(artworkKey),
+        objKeyHex: getBytes32FromString(arObjectKey),
         contentHash: Uint8Array.from(contentHash),
         metadataHash: Uint8Array.from(metadataHash),
+        editionOf: BigNumber.from(1),
+        editionNumber: BigNumber.from(1),
       }
 
       await mint(addressBook.mediaAddress, wallet1, mediaData)
@@ -164,7 +172,7 @@ async function start() {
       console.log(contentHash)
 
       const buf = await fs.readFile(filePath)
-      const balance = await MediaFactory.connect(
+      const balance = await Media__factory.connect(
         addressBook.mediaAddress,
         wallet1
       ).balanceOf(wallet1.address)
@@ -208,8 +216,12 @@ async function start() {
       let mediaData = {
         tokenURI: 'https://ipfs.io/ipfs/'.concat(contentCID.hash),
         metadataURI: 'https://ipfs.io/ipfs/'.concat(metadataCID.hash),
+        awKeyHex: getBytes32FromString(artworkKey),
+        objKeyHex: getBytes32FromString(arObjectKey),
         contentHash: Uint8Array.from(Buffer.from(contentHash, 'hex')),
         metadataHash: Uint8Array.from(metadataHash),
+        editionOf: BigNumber.from(1),
+        editionNumber: BigNumber.from(1),
       }
 
       await mint(addressBook.mediaAddress, wallet1, mediaData)
@@ -235,8 +247,12 @@ async function start() {
       let mediaData = {
         tokenURI: 'who cares',
         metadataURI: "i don't",
+        awKeyHex: getBytes32FromString(artworkKey),
+        objKeyHex: getBytes32FromString(arObjectKey),
         contentHash: contentHashBytes,
         metadataHash: metadataHashBytes,
+        editionOf: BigNumber.from(1),
+        editionNumber: BigNumber.from(1),
       }
 
       await mint(addressBook.mediaAddress, wallet1, mediaData)
@@ -359,7 +375,7 @@ async function start() {
         sellOnShare: Decimal.new(10),
       }
 
-      await setAsk(addressBook.mediaAddress, wallet1, tokenId, defaultAsk)
+      await setAsk(addressBook.marketAddress, wallet1, tokenId, defaultAsk)
       break
     }
     case 'removeAsk': {
@@ -368,7 +384,7 @@ async function start() {
       }
       const tokenId = BigNumber.from(args.tokenId)
 
-      await removeAsk(addressBook.mediaAddress, wallet1, tokenId)
+      await removeAsk(addressBook.marketAddress, wallet1, tokenId)
       break
     }
     case `setBid`: {
@@ -386,7 +402,7 @@ async function start() {
         bidder: wallet1.address,
       }
 
-      await setBid(addressBook.mediaAddress, wallet2, tokenId, defaultBid)
+      await setBid(addressBook.marketAddress, wallet2, tokenId, defaultBid)
       break
     }
     case `removeBid`: {
@@ -395,7 +411,7 @@ async function start() {
       }
 
       const tokenId = BigNumber.from(args.tokenId)
-      await removeBid(addressBook.mediaAddress, wallet2, tokenId)
+      await removeBid(addressBook.marketAddress, wallet2, tokenId)
       break
     }
   }

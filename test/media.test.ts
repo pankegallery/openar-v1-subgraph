@@ -1,9 +1,8 @@
 import { request } from 'graphql-request'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { generatedWallets } from '../utils/generatedWallets'
+import { generateWallets } from '../utils/generateWallets'
 import { Blockchain } from '@zoralabs/core/dist/utils/Blockchain'
-import { MarketFactory } from '../typechain/MarketFactory'
-import { MediaFactory } from '../typechain/MediaFactory'
+import { Media__factory, Market__factory, BaseERC20__factory } from '../typechain'
 import {
   BigNumber,
   BigNumberish,
@@ -27,6 +26,7 @@ import {
   TransfersQueryResponse,
   URIUpdatesQueryResponse,
   UserQueryResponse,
+  
 } from './types'
 import {
   askByIdQuery,
@@ -43,10 +43,11 @@ import {
   userByIdQuery,
 } from './queries'
 import { delay, exponentialDelay, randomHashBytes, toNumWei } from './utils'
-import { BaseErc20Factory } from '../typechain'
+import { nanoidCustom16, getBytes32FromString } from '../utils/utils'
 import { approveCurrency, mintCurrency } from '../utils/currency'
 import dotenv from 'dotenv'
-import { SolidityAsk, SolidityBid } from '../utils/types'
+import { SolidityAsk, MintData, SolidityBid } from '../utils/types'
+
 
 axiosRetry(axios, {
   retryDelay: exponentialDelay,
@@ -66,7 +67,7 @@ describe('Media', async () => {
 
   let provider = new JsonRpcProvider()
   let blockchain = new Blockchain(provider)
-  let [creatorWallet, otherWallet, anotherWallet] = generatedWallets(provider)
+  let [creatorWallet, otherWallet, anotherWallet] = generateWallets(provider)
 
   let defaultAsk = (currencyAddress: string) => ({
     currency: currencyAddress, // DAI
@@ -96,16 +97,20 @@ describe('Media', async () => {
       creator: Decimal.new(0),
     }
 
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
 
-    const mediaData = {
+    const mintData: MintData = {
+      awKeyHex: getBytes32FromString(nanoidCustom16()),
+      objKeyHex: getBytes32FromString(nanoidCustom16()),
       tokenURI: 'example.com',
       metadataURI: 'metadata.com',
       contentHash: contentHash,
       metadataHash: metadataHash,
+      editionOf: BigNumber.from(1),
+      editionNumber: BigNumber.from(1),
     }
 
-    await media.mint(mediaData, defaultBidShares)
+    await media.mint(mintData, defaultBidShares)
     await delay(5000)
   }
 
@@ -114,8 +119,8 @@ describe('Media', async () => {
     tokenId: BigNumberish,
     ask: SolidityAsk
   ): Promise<ContractTransaction> {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
-    const tx = await media.setAsk(tokenId, ask)
+    const market = Market__factory.connect(mediaAddress, wallet)
+    const tx = await market.setAsk(tokenId, ask)
     await delay(5000)
     return tx
   }
@@ -124,8 +129,8 @@ describe('Media', async () => {
     wallet: Wallet,
     tokenId: BigNumberish
   ): Promise<ContractTransaction> {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
-    const tx = await media.removeAsk(tokenId)
+    const market = Market__factory.connect(mediaAddress, wallet)
+    const tx = await market.removeAsk(tokenId)
     await delay(5000)
     return tx
   }
@@ -135,8 +140,8 @@ describe('Media', async () => {
     tokenId: BigNumberish,
     bid: SolidityBid
   ): Promise<ContractTransaction> {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
-    const tx = await media.setBid(tokenId, bid)
+    const market = Market__factory.connect(mediaAddress, wallet)
+    const tx = await market.setBid(tokenId, bid)
     await delay(5000)
     return tx
   }
@@ -145,8 +150,8 @@ describe('Media', async () => {
     wallet: Wallet,
     tokenId: BigNumberish
   ): Promise<ContractTransaction> {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
-    const tx = await media.removeBid(tokenId)
+    const market = Market__factory.connect(mediaAddress, wallet)
+    const tx = await market.removeBid(tokenId)
     await delay(5000)
     return tx
   }
@@ -156,17 +161,22 @@ describe('Media', async () => {
     tokenId: BigNumberish,
     bid: SolidityBid
   ): Promise<ContractTransaction> {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
-    const tx = await media.acceptBid(tokenId, bid)
+    const market = Market__factory.connect(mediaAddress, wallet)
+    const tx = await market.acceptBid(tokenId, bid)
     await delay(5000)
     return tx
   }
 
   async function deploy(wallet: Wallet) {
-    const market = await (await new MarketFactory(wallet).deploy()).deployed()
+    const currency = await (
+      await new BaseERC20__factory(wallet).deploy('BRECK', 'BRECK', BigNumber.from(18))
+    ).deployed()
+    currencyAddress = currency.address
+
+    const market = await (await new Market__factory(wallet).deploy(currency.address)).deployed()
     marketAddress = market.address
 
-    const media = await (await new MediaFactory(wallet).deploy()).deployed()
+    const media = await (await new Media__factory(wallet).deploy()).deployed()
 
     await media.configure(market.address);
 
@@ -174,12 +184,9 @@ describe('Media', async () => {
 
     await market.configure(mediaAddress)
 
-    const currency = await (
-      await new BaseErc20Factory(wallet).deploy('BRECK', 'BRECK', BigNumber.from(18))
-    ).deployed()
-    currencyAddress = currency.address
+    
 
-    for (const toWallet of generatedWallets(provider)) {
+    for (const toWallet of generateWallets(provider)) {
       await mintCurrency(
         wallet,
         currencyAddress,
@@ -194,38 +201,38 @@ describe('Media', async () => {
   }
 
   async function transfer(wallet: Wallet, tokenId: BigNumberish, to: string) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     const tx = await media.transferFrom(wallet.address, to, tokenId)
     let receipt = await provider.getTransactionReceipt(tx.hash)
     await delay(5000)
   }
 
   async function burn(wallet: Wallet, tokenId: BigNumber) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     await media.burn(tokenId)
     await delay(5000)
   }
 
   async function approve(wallet: Wallet, tokenId: BigNumber, to: string) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     await media.approve(to, tokenId)
     await delay(5000)
   }
 
   async function updateTokenURI(wallet: Wallet, tokenId: BigNumber, uri: string) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     await media.updateTokenURI(tokenId, uri)
     await delay(5000)
   }
 
   async function updateTokenMetadataURI(wallet: Wallet, tokenId: BigNumber, uri: string) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     await media.updateTokenMetadataURI(tokenId, uri)
     await delay(5000)
   }
 
   async function setApprovalForAll(wallet: Wallet, operator: string, approved: boolean) {
-    const media = await MediaFactory.connect(mediaAddress, wallet)
+    const media = Media__factory.connect(mediaAddress, wallet)
     await media.setApprovalForAll(operator, approved)
     await delay(5000)
   }
@@ -268,7 +275,7 @@ describe('Media', async () => {
     await system(`yarn deploy-local`)
     console.log('Successfully Deployed Subgraph')
 
-    let currencyFactory = BaseErc20Factory.connect(currencyAddress, creatorWallet)
+    let currencyFactory = BaseERC20__factory.connect(currencyAddress, creatorWallet)
     currencyName = await currencyFactory.name()
     currencySymbol = await currencyFactory.symbol()
     currencyDecimals = await currencyFactory.decimals()

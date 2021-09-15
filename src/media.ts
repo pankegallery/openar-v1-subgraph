@@ -256,6 +256,28 @@ function handleMint(event: Transfer): void {
   let tokenId = event.params.tokenId
 
   let mediaContract = MediaContract.bind(event.address)
+
+
+//   struct MediaData {
+//     // The Hex representation of openAR Artwork's key
+//     bytes32 awKeyHex;
+//     // The Hex representation of openAR ArObject's key
+//     bytes32 objKeyHex;
+//     // How many times has the object been minted
+//     uint256 editionOf;
+//     // The number of the object
+//     uint256 editionNumber;
+// }
+
+  let mediaData = mediaContract.tokenMediaData(tokenId)
+
+  
+
+  log.info(
+    `artworkKey, arObjKey: {}, {}`,
+    [mediaData.value0.toString(), mediaData.value1.toString()]
+  )
+
   let contentURI = mediaContract.tokenURI(tokenId)
   let metadataURI = mediaContract.tokenMetadataURI(tokenId)
 
@@ -270,6 +292,10 @@ function handleMint(event: Transfer): void {
     creator,
     creator,
     creator,
+    mediaData.value0.toString(),
+    mediaData.value1.toString(),
+    mediaData.value2,
+    mediaData.value3,
     contentURI,
     contentHash,
     metadataURI,

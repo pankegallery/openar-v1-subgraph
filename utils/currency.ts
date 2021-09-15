@@ -1,5 +1,5 @@
 import { BigNumber, Wallet } from 'ethers'
-import { BaseErc20Factory } from '../typechain'
+import { BaseERC20__factory } from '../typechain'
 import { MaxUint256 } from '@ethersproject/constants'
 
 export async function deployCurrency(
@@ -7,7 +7,7 @@ export async function deployCurrency(
   name: string = 'DAI',
   symbol: string = 'DAI'
 ): Promise<string> {
-  const bidCurrencyDeployTx = await new BaseErc20Factory(wallet).deploy(
+  const bidCurrencyDeployTx = await new BaseERC20__factory(wallet).deploy(
     name,
     symbol,
     BigNumber.from(18)
@@ -21,7 +21,7 @@ export async function approveCurrency(
   tokenAddress: string,
   to: string
 ): Promise<void> {
-  const tx = await BaseErc20Factory.connect(tokenAddress, wallet).approve(to, MaxUint256)
+  const tx = await BaseERC20__factory.connect(tokenAddress, wallet).approve(to, MaxUint256)
   await tx.wait()
 }
 
@@ -31,7 +31,7 @@ export async function mintCurrency(
   to: string,
   amount: BigNumber
 ): Promise<void> {
-  const tx = await BaseErc20Factory.connect(tokenAdress, wallet).mint(to, amount)
+  const tx = await BaseERC20__factory.connect(tokenAdress, wallet).mint(to, amount)
   await tx.wait()
   console.log(tx)
 }
