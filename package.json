@@ -4,20 +4,16 @@
   "scripts": {
     "seed-graph": "ts-node scripts/seed",
     "deploy-contracts": "ts-node scripts/deploy.ts",
-    "prepare:mainnet": "mustache config/1.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:rinkeby": "mustache config/4.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:mumbai": "mustache config/80001.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:polygon": "mustache config/137.json subgraph.template.yaml > subgraph.yaml",
     "prepare:xdai": "mustache config/100.json subgraph.template.yaml > subgraph.yaml",
     "prepare:local": "mustache config/31337.json subgraph.template.yaml > subgraph.yaml",
-    "graph-create": "graph create novazembla/openar-v1-subgraph --node https://api.thegraph.com/deploy/",
+    "graph-create": "graph create pankegallery/openar-v1-subgraph --node https://api.thegraph.com/deploy/",
     "test": "jest",
     "graph-codegen": "graph codegen --output-dir types",
     "graph-build": "graph build",
-    "graph-deploy": "graph deploy novazembla/openar-v1-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "graph-create-local": "graph create novazembla/openar-v1-subgraph --node http://127.0.0.1:8020",
-    "graph-deploy-local": "graph deploy novazembla/openar-v1-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "graph-remove-local": "graph remove novazembla/openar-v1-subgraph --node http://localhost:8020/"
+    "graph-deploy": "graph deploy pankegallery/openar-v1-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "graph-create-local": "graph create pankegallery/openar-v1-subgraph --node http://127.0.0.1:8020",
+    "graph-deploy-local": "graph deploy pankegallery/openar-v1-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "graph-remove-local": "graph remove pankegallery/openar-v1-subgraph --node http://localhost:8020/"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.0.16",
