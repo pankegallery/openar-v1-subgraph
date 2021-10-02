@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: Zora Media
+description: openAR Platform
 repository: https://github.com/pankegallery/openar-v1
 schema:
   file: ./schema.graphql
