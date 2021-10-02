@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 description: Zora Media
-repository: https://github.com/openar/openar-v1-subgraph
+repository: https://github.com/pankegallery/openar-v1
 schema:
   file: ./schema.graphql
 dataSources:

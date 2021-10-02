@@ -1,6 +1,6 @@
 # openAR V1 Subgraph
 
-The [openAR Subgraph](https://github.com/pankegallery/openar-v1-subgraph), is a public subgraph implementation of the Graph Protocol for the openAR Protocol. It syncs with the blockchain and indexes pertinent data about openAR cryptomedia. It also provides an easy to use GraphQL interface for developers to imply query data about the openAR Protocol.
+The [openAR Subgraph](https://github.com/pankegallery/openar-v1), is a public subgraph implementation of the Graph Protocol for the openAR Protocol. It syncs with the blockchain and indexes pertinent data about openAR cryptomedia. It also provides an easy to use GraphQL interface for developers to imply query data about the openAR Protocol.
 
 The Graph offers a hosted service for public interaction with the openAR Subgraph, but you can also run your own graph-node with a openAR Subgraph by following the Graph's [documentation](https://thegraph.com/docs/network#indexing) and joining their Indexer discord.
 
@@ -13,7 +13,7 @@ Documentation:
 - [Querying](docs/querying.md)
 
 References:
-- [Github](https://github.com/pankegallery/openar-v1-subgraph)
+- [Github](https://github.com/pankegallery/openar-v1)
 - [The Graph](https://thegraph.com/explorer/subgraph/pankegallery/openar-v1)
 - [The Graph Querying Docs](https://thegraph.com/docs/query-the-graph)
 - [GraphQL](https://graphql.org/)
@@ -61,7 +61,7 @@ Terminal 2:
 ```
 yarn dev-deploy
 ```
-Then copy and past the info in addresses/31337.json to the 31337.json file in openar/openar-v1-subgraph/config (create by cloning 1.json if needed). You need to configure market, media, and weth address
+Then copy and past the info in addresses/31337.json to the 31337.json file in openar/openar-v1/config (create by cloning 1.json if needed). You need to configure market, media, and weth address
 
 ### 4. Build and Deploy Subgraph to Local Graph Node
 

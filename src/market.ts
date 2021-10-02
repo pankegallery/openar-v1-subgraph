@@ -22,7 +22,7 @@ const REMOVED = 'Removed'
 const FINALIZED = 'Finalized'
 
 /**
- * Handler called when a `BidShareUpdated` Event is emitted on the Zora Market Contract
+ * Handler called when a `BidShareUpdated` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleBidShareUpdated(event: BidShareUpdated): void {
@@ -51,7 +51,7 @@ export function handleBidShareUpdated(event: BidShareUpdated): void {
 }
 
 /**
- * Handler called when the `AskCreated` Event is emitted on the Zora Market Contract
+ * Handler called when the `AskCreated` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleAskCreated(event: AskCreated): void {
@@ -119,7 +119,7 @@ export function handleAskCreated(event: AskCreated): void {
 }
 
 /**
- * Handler called when the `AskRemoved` Event is emitted on the Zora Market Contract
+ * Handler called when the `AskRemoved` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleAskRemoved(event: AskRemoved): void {
@@ -181,7 +181,7 @@ export function handleAskRemoved(event: AskRemoved): void {
 }
 
 /**
- * Handler called `BidCreated` Event is emitted on the Zora Market Contract
+ * Handler called `BidCreated` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleBidCreated(event: BidCreated): void {
@@ -229,7 +229,7 @@ export function handleBidCreated(event: BidCreated): void {
 }
 
 /**
- * Handler called when the `BidRemoved` Event is emitted on the Zora Market Contract
+ * Handler called when the `BidRemoved` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleBidRemoved(event: BidRemoved): void {
@@ -292,7 +292,7 @@ export function handleBidRemoved(event: BidRemoved): void {
 }
 
 /**
- * Handler called when the `BidFinalized` Event is emitted on the Zora Market Contract
+ * Handler called when the `BidFinalized` Event is emitted on the openAR Market Contract
  * @param event
  */
 export function handleBidFinalized(event: BidFinalized): void {

@@ -92,7 +92,7 @@ export function createCurrency(id: string): Currency {
 }
 
 /**
- * Fetch the BidShares for a piece of Media by Reading the Zora Market Contract
+ * Fetch the BidShares for a piece of Media by Reading the openAR Market Contract
  * @param tokenId
  * @param mediaAddress
  */

@@ -1,5 +1,5 @@
 type Media @entity {
-  "The tokenId on the Zora Media Contract"
+  "The tokenId on the openAR Media Contract"
   id: ID!
 
   "The transaction hash the media was created at"
@@ -11,7 +11,7 @@ type Media @entity {
   "The creator of the Media"
   creator: User!
 
-  "The previous owner of the Zora Media's Market"
+  "The previous owner of the openAR Media's Market"
   prevOwner: User!
 
   "The approved user of the Media"
@@ -248,7 +248,7 @@ type Currency @entity {
   "The decimals of the Currency"
   decimals: Int
 
-  "Total Bid Liquidity of the Currency on all Zora Media"
+  "Total Bid Liquidity of the Currency on all openAR Media"
   liquidity: BigInt!
 
   "The active Bids denominated in the Currency"

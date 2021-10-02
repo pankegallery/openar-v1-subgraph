@@ -57,7 +57,7 @@ axiosRetry(axios, {
 dotenv.config({ path: '.env.local' })
 jest.setTimeout(1000000)
 
-const gqlURL = 'http://127.0.0.1:8000/subgraphs/name/pankegallery/openar-v1-subgraph'
+const gqlURL = 'http://127.0.0.1:8000/subgraphs/name/pankegallery/openar-v1'
 const pathToGraphNode = process.env.PATH_TO_GRAPH
 
 describe('Media', async () => {

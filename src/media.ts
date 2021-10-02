@@ -21,7 +21,7 @@ const CONTENT = 'Content'
 const METADATA = 'Metadata'
 
 /**
- * Handler called when the `TokenURIUpdated` Event is called on the Zora Media Contract
+ * Handler called when the `TokenURIUpdated` Event is called on the openAR Media Contract
  * @param event
  */
 export function handleTokenURIUpdated(event: TokenURIUpdated): void {
@@ -61,7 +61,7 @@ export function handleTokenURIUpdated(event: TokenURIUpdated): void {
 }
 
 /**
- * Handler called when the `TokenMetadataURIUpdated` Event is called on the Zora Media Contract
+ * Handler called when the `TokenMetadataURIUpdated` Event is called on the openAR Media Contract
  * @param event
  */
 export function handleTokenMetadataURIUpdated(event: TokenMetadataURIUpdated): void {
@@ -105,7 +105,7 @@ export function handleTokenMetadataURIUpdated(event: TokenMetadataURIUpdated): v
 }
 
 /**
- * Handler called when the `Transfer` Event is called on the Zora Media Contract
+ * Handler called when the `Transfer` Event is called on the openAR Media Contract
  * @param event
  */
 export function handleTransfer(event: Transfer): void {
@@ -166,7 +166,7 @@ export function handleTransfer(event: Transfer): void {
 }
 
 /**
- * Handler called when the `Approval` Event is called on the Zora Media Contract
+ * Handler called when the `Approval` Event is called on the openAR Media Contract
  * @param event
  */
 export function handleApproval(event: Approval): void {
@@ -200,7 +200,7 @@ export function handleApproval(event: Approval): void {
 }
 
 /**
- * Handler called when the `ApprovalForAll` Event is called on the Zora Media Contract
+ * Handler called when the `ApprovalForAll` Event is called on the openAR Media Contract
  * @param event
  */
 export function handleApprovalForAll(event: ApprovalForAll): void {
@@ -247,7 +247,7 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
 }
 
 /**
- * Handler called when the `Mint` Event is called on the Zora Media Contract
+ * Handler called when the `Mint` Event is called on the openAR Media Contract
  * @param event
  */
 function handleMint(event: Transfer): void {
