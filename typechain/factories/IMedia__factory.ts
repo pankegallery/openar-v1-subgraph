@@ -125,8 +125,26 @@ const _abi = [
         name: "marketContractAddress",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "maxArObjectEditionOf",
+        type: "uint256",
+      },
     ],
     name: "configure",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "mintAddress",
+        type: "address",
+      },
+    ],
+    name: "configureMintAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -357,6 +375,16 @@ const _abi = [
           {
             internalType: "uint256",
             name: "editionOf",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "batchSize",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "batchOffset",
             type: "uint256",
           },
           {

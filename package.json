@@ -8,7 +8,7 @@
     "prepare:rinkeby": "mustache config/4.json subgraph.template.yaml > subgraph.yaml",
     "prepare:mumbai": "mustache config/80001.json subgraph.template.yaml > subgraph.yaml",
     "prepare:polygon": "mustache config/137.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:xdai": "mustache config/xdai.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:xdai": "mustache config/100.json subgraph.template.yaml > subgraph.yaml",
     "prepare:local": "mustache config/31337.json subgraph.template.yaml > subgraph.yaml",
     "graph-create": "graph create novazembla/openar-v1-subgraph --node https://api.thegraph.com/deploy/",
     "test": "jest",

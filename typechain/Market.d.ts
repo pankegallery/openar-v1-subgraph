@@ -25,6 +25,7 @@ interface MarketInterface extends ethers.utils.Interface {
     "acceptBid(uint256,tuple)": FunctionFragment;
     "bidForTokenBidder(uint256,address)": FunctionFragment;
     "bidSharesForToken(uint256)": FunctionFragment;
+    "buyFirstAvailable(uint256[],tuple,address)": FunctionFragment;
     "configure(address)": FunctionFragment;
     "configureEnforcePlatformCuts(bool)": FunctionFragment;
     "configurePausedUnpaused(bool)": FunctionFragment;
@@ -45,7 +46,7 @@ interface MarketInterface extends ethers.utils.Interface {
     "removeBid(uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setAsk(uint256,tuple)": FunctionFragment;
-    "setAskForBatch(uint256[],tuple,bytes32)": FunctionFragment;
+    "setAskForBatch(uint256[],tuple)": FunctionFragment;
     "setBid(uint256,tuple)": FunctionFragment;
     "setBidShares(uint256,tuple)": FunctionFragment;
     "setInitialAsk(uint256,tuple)": FunctionFragment;
@@ -74,6 +75,20 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "bidSharesForToken",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "buyFirstAvailable",
+    values: [
+      BigNumberish[],
+      {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      string
+    ]
   ): string;
   encodeFunctionData(functionFragment: "configure", values: [string]): string;
   encodeFunctionData(
@@ -167,11 +182,7 @@ interface MarketInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setAskForBatch",
-    values: [
-      BigNumberish[],
-      { amount: BigNumberish; currency: string },
-      BytesLike
-    ]
+    values: [BigNumberish[], { amount: BigNumberish; currency: string }]
   ): string;
   encodeFunctionData(
     functionFragment: "setBid",
@@ -223,6 +234,10 @@ interface MarketInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "bidSharesForToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "buyFirstAvailable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "configure", data: BytesLike): Result;
@@ -486,6 +501,32 @@ export class Market extends Contract {
       ]
     >;
 
+    buyFirstAvailable(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "buyFirstAvailable(uint256[],(uint256,address,address,address,(uint256)),address)"(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     configure(
       mediaContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -711,14 +752,12 @@ export class Market extends Contract {
     setAskForBatch(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "setAskForBatch(uint256[],(uint256,address),bytes32)"(
+    "setAskForBatch(uint256[],(uint256,address))"(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -898,6 +937,32 @@ export class Market extends Contract {
       prevOwner: [BigNumber] & { value: BigNumber };
     }
   >;
+
+  buyFirstAvailable(
+    tokenIds: BigNumberish[],
+    bid: {
+      amount: BigNumberish;
+      currency: string;
+      bidder: string;
+      recipient: string;
+      sellOnShare: { value: BigNumberish };
+    },
+    seller: string,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "buyFirstAvailable(uint256[],(uint256,address,address,address,(uint256)),address)"(
+    tokenIds: BigNumberish[],
+    bid: {
+      amount: BigNumberish;
+      currency: string;
+      bidder: string;
+      recipient: string;
+      sellOnShare: { value: BigNumberish };
+    },
+    seller: string,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   configure(
     mediaContractAddress: string,
@@ -1124,14 +1189,12 @@ export class Market extends Contract {
   setAskForBatch(
     tokenIds: BigNumberish[],
     ask: { amount: BigNumberish; currency: string },
-    objKeyHex: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "setAskForBatch(uint256[],(uint256,address),bytes32)"(
+  "setAskForBatch(uint256[],(uint256,address))"(
     tokenIds: BigNumberish[],
     ask: { amount: BigNumberish; currency: string },
-    objKeyHex: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1323,6 +1386,32 @@ export class Market extends Contract {
         prevOwner: [BigNumber] & { value: BigNumber };
       }
     >;
+
+    buyFirstAvailable(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "buyFirstAvailable(uint256[],(uint256,address,address,address,(uint256)),address)"(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     configure(
       mediaContractAddress: string,
@@ -1539,14 +1628,12 @@ export class Market extends Contract {
     setAskForBatch(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setAskForBatch(uint256[],(uint256,address),bytes32)"(
+    "setAskForBatch(uint256[],(uint256,address))"(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1913,6 +2000,32 @@ export class Market extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    buyFirstAvailable(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "buyFirstAvailable(uint256[],(uint256,address,address,address,(uint256)),address)"(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     configure(
       mediaContractAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2106,14 +2219,12 @@ export class Market extends Contract {
     setAskForBatch(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "setAskForBatch(uint256[],(uint256,address),bytes32)"(
+    "setAskForBatch(uint256[],(uint256,address))"(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2249,6 +2360,32 @@ export class Market extends Contract {
     "bidSharesForToken(uint256)"(
       tokenId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    buyFirstAvailable(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "buyFirstAvailable(uint256[],(uint256,address,address,address,(uint256)),address)"(
+      tokenIds: BigNumberish[],
+      bid: {
+        amount: BigNumberish;
+        currency: string;
+        bidder: string;
+        recipient: string;
+        sellOnShare: { value: BigNumberish };
+      },
+      seller: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     configure(
@@ -2450,14 +2587,12 @@ export class Market extends Contract {
     setAskForBatch(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "setAskForBatch(uint256[],(uint256,address),bytes32)"(
+    "setAskForBatch(uint256[],(uint256,address))"(
       tokenIds: BigNumberish[],
       ask: { amount: BigNumberish; currency: string },
-      objKeyHex: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

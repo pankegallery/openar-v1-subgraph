@@ -29,7 +29,8 @@ interface MediaInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "baseURI()": FunctionFragment;
     "burn(uint256)": FunctionFragment;
-    "configure(address)": FunctionFragment;
+    "configure(address,uint256)": FunctionFragment;
+    "configureMintAddress(address)": FunctionFragment;
     "creatorBalanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
@@ -41,6 +42,7 @@ interface MediaInterface extends ethers.utils.Interface {
     "mintWithSig(address,tuple,tuple,uint256,tuple)": FunctionFragment;
     "mintWithSigNonces(address)": FunctionFragment;
     "name()": FunctionFragment;
+    "openARMint()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "permit(address,uint256,tuple)": FunctionFragment;
@@ -91,7 +93,14 @@ interface MediaInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
   encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
-  encodeFunctionData(functionFragment: "configure", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "configure",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "configureMintAddress",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "creatorBalanceOf",
     values: [string]
@@ -150,6 +159,8 @@ interface MediaInterface extends ethers.utils.Interface {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -195,6 +206,10 @@ interface MediaInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "openARMint",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
@@ -316,6 +331,10 @@ interface MediaInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "configure", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "configureMintAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "creatorBalanceOf",
     data: BytesLike
   ): Result;
@@ -350,6 +369,7 @@ interface MediaInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "openARMint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
@@ -558,11 +578,23 @@ export class Media extends Contract {
 
     configure(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "configure(address)"(
+    "configure(address,uint256)"(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    configureMintAddress(
+      openARMintAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "configureMintAddress(address)"(
+      openARMintAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -676,6 +708,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -697,7 +731,7 @@ export class Media extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
+    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
       creator: string,
       tokenURIs: string[],
       metadataURIs: string[],
@@ -707,6 +741,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -799,6 +835,10 @@ export class Media extends Contract {
     name(overrides?: CallOverrides): Promise<[string]>;
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
+
+    openARMint(overrides?: CallOverrides): Promise<[string]>;
+
+    "openARMint()"(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -1139,11 +1179,23 @@ export class Media extends Contract {
 
   configure(
     marketContractAddr: string,
+    maxArObjectEditionOf: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "configure(address)"(
+  "configure(address,uint256)"(
     marketContractAddr: string,
+    maxArObjectEditionOf: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  configureMintAddress(
+    openARMintAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "configureMintAddress(address)"(
+    openARMintAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1257,6 +1309,8 @@ export class Media extends Contract {
       awKeyHex: BytesLike;
       objKeyHex: BytesLike;
       editionOf: BigNumberish;
+      batchSize: BigNumberish;
+      batchOffset: BigNumberish;
       initialAsk: BigNumberish;
       mintArObjectNonce: BigNumberish;
       currency: string;
@@ -1278,7 +1332,7 @@ export class Media extends Contract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
+  "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
     creator: string,
     tokenURIs: string[],
     metadataURIs: string[],
@@ -1288,6 +1342,8 @@ export class Media extends Contract {
       awKeyHex: BytesLike;
       objKeyHex: BytesLike;
       editionOf: BigNumberish;
+      batchSize: BigNumberish;
+      batchOffset: BigNumberish;
       initialAsk: BigNumberish;
       mintArObjectNonce: BigNumberish;
       currency: string;
@@ -1380,6 +1436,10 @@ export class Media extends Contract {
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
+
+  openARMint(overrides?: CallOverrides): Promise<string>;
+
+  "openARMint()"(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -1708,11 +1768,23 @@ export class Media extends Contract {
 
     configure(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "configure(address)"(
+    "configure(address,uint256)"(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    configureMintAddress(
+      openARMintAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "configureMintAddress(address)"(
+      openARMintAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1826,6 +1898,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -1847,7 +1921,7 @@ export class Media extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
+    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
       creator: string,
       tokenURIs: string[],
       metadataURIs: string[],
@@ -1857,6 +1931,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -1949,6 +2025,10 @@ export class Media extends Contract {
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
+
+    openARMint(overrides?: CallOverrides): Promise<string>;
+
+    "openARMint()"(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -2357,11 +2437,23 @@ export class Media extends Contract {
 
     configure(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "configure(address)"(
+    "configure(address,uint256)"(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    configureMintAddress(
+      openARMintAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "configureMintAddress(address)"(
+      openARMintAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2475,6 +2567,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -2496,7 +2590,7 @@ export class Media extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
+    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
       creator: string,
       tokenURIs: string[],
       metadataURIs: string[],
@@ -2506,6 +2600,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -2598,6 +2694,10 @@ export class Media extends Contract {
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    openARMint(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "openARMint()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2938,11 +3038,23 @@ export class Media extends Contract {
 
     configure(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "configure(address)"(
+    "configure(address,uint256)"(
       marketContractAddr: string,
+      maxArObjectEditionOf: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    configureMintAddress(
+      openARMintAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "configureMintAddress(address)"(
+      openARMintAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -3058,6 +3170,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -3079,7 +3193,7 @@ export class Media extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
+    "mintArObject(address,string[],string[],bytes32[],bytes32[],(bytes32,bytes32,uint256,uint256,uint256,uint256,uint256,address,bool),((uint256),(uint256),(uint256),(uint256),(uint256)),(uint256,uint8,bytes32,bytes32))"(
       creator: string,
       tokenURIs: string[],
       metadataURIs: string[],
@@ -3089,6 +3203,8 @@ export class Media extends Contract {
         awKeyHex: BytesLike;
         objKeyHex: BytesLike;
         editionOf: BigNumberish;
+        batchSize: BigNumberish;
+        batchOffset: BigNumberish;
         initialAsk: BigNumberish;
         mintArObjectNonce: BigNumberish;
         currency: string;
@@ -3181,6 +3297,10 @@ export class Media extends Contract {
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    openARMint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "openARMint()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

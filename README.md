@@ -1,20 +1,20 @@
-# Zora V1 Subgraph
+# openAR V1 Subgraph
 
-The [Zora Subgraph](https://github.com/ourzora/zora-v1-subgraph), is a public subgraph implementation of the Graph Protocol for the Zora Protocol. It syncs with the blockchain and indexes pertinent data about Zora cryptomedia. It also provides an easy to use GraphQL interface for developers to imply query data about the Zora Protocol.
+The [openAR Subgraph](https://github.com/pankegallery/openar-v1-subgraph), is a public subgraph implementation of the Graph Protocol for the openAR Protocol. It syncs with the blockchain and indexes pertinent data about openAR cryptomedia. It also provides an easy to use GraphQL interface for developers to imply query data about the openAR Protocol.
 
-The Graph offers a hosted service for public interaction with the Zora Subgraph, but you can also run your own graph-node with a Zora Subgraph by following the Graph's [documentation](https://thegraph.com/docs/network#indexing) and joining their Indexer discord.
+The Graph offers a hosted service for public interaction with the openAR Subgraph, but you can also run your own graph-node with a openAR Subgraph by following the Graph's [documentation](https://thegraph.com/docs/network#indexing) and joining their Indexer discord.
 
 Networks:
-- [Rinkeby](https://thegraph.com/explorer/subgraph/ourzora/zora-v1)
-- [Mainnet](https://thegraph.com/explorer/subgraph/ourzora/zora-v1-rinkeby)
+- [Rinkeby](https://thegraph.com/explorer/subgraph/pankegallery/openar-v1)
+- [Mainnet](https://thegraph.com/explorer/subgraph/pankegallery/openar-v1-rinkeby)
 
 Documentation:
 - [Entities](docs/entities.md)
 - [Querying](docs/querying.md)
 
 References:
-- [Github](https://github.com/ourzora/zora-v1-subgraph)
-- [The Graph](https://thegraph.com/explorer/subgraph/ourzora/zora-v1)
+- [Github](https://github.com/pankegallery/openar-v1-subgraph)
+- [The Graph](https://thegraph.com/explorer/subgraph/pankegallery/openar-v1)
 - [The Graph Querying Docs](https://thegraph.com/docs/query-the-graph)
 - [GraphQL](https://graphql.org/)
 
@@ -77,10 +77,10 @@ Hint:
 
 ```
 yarn prepare:local 
-yarn codegen
-yarn build
-yarn create-local
-yarn deploy-local
+yarn graph-codegen
+yarn graph-build
+yarn graph-create-local
+yarn graph-deploy-local
 ```
 
 ### 5. Seed Contract with Newly Minted Media

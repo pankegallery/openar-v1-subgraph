@@ -43,7 +43,7 @@ async function start() {
   const path = `${process.cwd()}/.env${
     args.chainId === 1 ? '.prod' : args.chainId === 4 ? '.dev' : '.local'
   }`
-
+ 
   const sharedAddressPath = `${process.cwd()}/config/${args.chainId}.json`
   // @ts-ignore
   const addressBook = JSON.parse(await fs.readFile(sharedAddressPath))

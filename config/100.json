@@ -1,0 +1,8 @@
+{
+  "network": "mainnet",
+  "marketAddress": "DCB33e41cA2E06B1b402D8129A5B9120ED2dF6cC",
+  "marketStartBlock": 18378538,
+  "mediaAddress": "1b5f55D14d2d571EF748c840d1DFa93af5A53aFF",
+  "mediaStartBlock": 18378538,
+  "wethAddress": "e91D153E0b41518A2Ce8Dd3D7944Fa863463a97d"
+}
